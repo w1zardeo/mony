@@ -318,6 +318,7 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { colors } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { CURRENCIES_DATA } from "../constants/currency";
 
 function TabButton({ title, active, onPress }) {
   return (
@@ -339,25 +340,29 @@ export default function BillsScreen() {
   const navigation = useNavigation();
 
   const billsFromRedux = useSelector((state) => state.bills.list || []);
-  const listToRender = billsFromRedux; 
+  const listToRender = billsFromRedux;
 
-  const total = listToRender.reduce(
-    (sum, item) => sum + (Number(item.balance ?? 0) || 0),
-    0
-  );
+   const convertToUAH = (amount, currencyCode) => {
+    const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
+    if (!currency) return Number(amount) || 0;
+    return (Number(amount) || 0) * currency.rateToUAH;
+  };
+
+  const total = listToRender.reduce((sum, item) => {
+    const converted = convertToUAH(item.balance, item.currencyCode);
+    return sum + converted;
+  }, 0);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Загальний баланс</Text>
-          <Text style={styles.headerAmount}>{total} ₴</Text>
+          <Text style={styles.headerAmount}>{total.toFixed(2)} ₴</Text>
 
           <TouchableOpacity
             style={styles.plusCircle}
-            onPress={() =>
-              navigation.navigate("AddBillsModal")
-            }
+            onPress={() => navigation.navigate("AddBillsModal")}
           >
             <Text style={styles.plusText}>+</Text>
           </TouchableOpacity>
@@ -400,9 +405,7 @@ export default function BillsScreen() {
                   <View style={styles.billsInfo}>
                     <Text style={styles.title}>{item.title}</Text>
                     <Text style={styles.billsAmount}>
-                      {(item.balance) +
-                        " " +
-                        (item.currencyCode || "₴")}
+                      {item.balance + " " + (item.currencyCode || "₴")}
                     </Text>
                   </View>
                 </View>
