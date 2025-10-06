@@ -1,5 +1,5 @@
 export const billsType = [
-    {label: 'Звичайний', value: 'usual'},
+    {label: 'Рахунки', value: 'usual'},
     {label: 'Заощадження', value: 'savings'}
     
 ]
