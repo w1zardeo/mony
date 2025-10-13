@@ -31,7 +31,7 @@ export default function AddBillsModal() {
   const { currency } = useContext(CurrencyContext);
   const [title, setTitle] = useState("");
   const [bill, setBill] = useState({
-    type: route.params?.defaultType || "usual", // якщо передано defaultType — використовуємо його
+    type: route.params?.defaultType || "usual", 
     balance: "",
   });
   const [image, setImage] = useState(null);
@@ -39,19 +39,21 @@ export default function AddBillsModal() {
   const navigation = useNavigation();
 
   const onSave = () => {
-    const payload = {
-      id: Date.now().toString(),
-      title: title.trim() || "Новий рахунок",
-      balance: Number(bill.balance) || 0,
-      currency: currency.name,
-      currencyCode: currency.code,
-      type: bill.type || "usual",
-      image: image || null,
-    };
-
-    dispatch(addBill(payload));
-    navigation.goBack();
+  const payload = {
+    id: Date.now().toString(),
+    title: title.trim() || "Новий рахунок",
+    // Зберігаємо баланс як рядок. 
+    // .trim() видаляє зайві пробіли, а || "0" обробляє випадок, коли поле порожнє.
+    balance: bill.balance.trim() || "0", 
+    currency: currency.name,
+    currencyCode: currency.code,
+    type: bill.type || "usual",
+    image: image || null,
   };
+
+  dispatch(addBill(payload));
+  navigation.goBack();
+};
 
   const pickImage = async () => {
     const permissionResult =

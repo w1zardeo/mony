@@ -6,6 +6,8 @@ import BottomTabsNavigator from "./BottomTabs";
 import CurrencyModal from "../modals/CurrencyModal";
 import AddBillsModal from "../modals/AddBillsModal";
 import { CurrencyProvider } from "../context/currencyContext";
+import AddTransactionModal from "../components/AddTransactionModal";
+import SelectBillModal from "../modals/SelectBillModal";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +48,24 @@ export default function AppNavigator() {
           name="AddBillsModal"
           component={AddBillsModal}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddTransaction"
+          component={AddTransactionModal}
+          options={{
+            headerShown: false,
+            presentation: "modal", // відкриває як модалку
+            animation: "slide_from_bottom", // анімація знизу
+          }}
+        />
+        <Stack.Screen
+          name="SelectBillModal"
+          component={SelectBillModal}
+          options={{
+            headerShown: false,
+            presentation: "modal", // відкриває як модалку
+            animation: "slide_from_bottom", // анімація знизу
+          }}
         />
       </Stack.Navigator>
     </CurrencyProvider>
