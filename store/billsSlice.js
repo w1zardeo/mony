@@ -40,21 +40,23 @@ const billsSlice = createSlice({
     setSelectedBill(state, action) {
       state.selectedBill = action.payload;
     },
-    // Цей код виправляє помилку для СТАРИХ і НОВИХ рахунків
     updateBillBalance(state, action) {
       const { billId, amount } = action.payload;
       const billToUpdate = state.list.find((bill) => bill.id === billId);
 
       if (billToUpdate) {
-        // ▼▼▼ ЦЕЙ РЯДОК - КЛЮЧОВИЙ ▼▼▼
-        // Він примусово перетворює будь-що (число, undefined, null) на рядок перед .replace()
+        // Перетворюємо поточний баланс на число, враховуючи коми
         const currentBalanceString = String(billToUpdate.balance || '0');
-        
         const currentBalance = parseFloat(currentBalanceString.replace(",", "."));
+
+        // Перетворюємо суму транзакції на число
         const transactionAmount = parseFloat(String(amount).replace(",", "."));
         
-        const newBalance = currentBalance - transactionAmount;
+        // ▼▼▼ ОСЬ ТУТ ВИПРАВЛЕННЯ ▼▼▼
+        // Змінили мінус (-) на плюс (+), щоб правильно обробляти від'ємні числа
+        const newBalance = currentBalance + transactionAmount;
         
+        // Зберігаємо баланс з двома знаками після коми
         billToUpdate.balance = newBalance.toFixed(2);
       }
     },

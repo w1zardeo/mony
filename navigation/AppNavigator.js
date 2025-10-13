@@ -6,7 +6,7 @@ import BottomTabsNavigator from "./BottomTabs";
 import CurrencyModal from "../modals/CurrencyModal";
 import AddBillsModal from "../modals/AddBillsModal";
 import { CurrencyProvider } from "../context/currencyContext";
-import AddTransactionModal from "../components/AddTransactionModal";
+import AddTransactionModal from "../modals/AddTransactionModal";
 import SelectBillModal from "../modals/SelectBillModal";
 
 const Stack = createNativeStackNavigator();
