@@ -13,7 +13,7 @@ export default function BottomTabsNavigator() {
         headerShown: false,
         tabBarActiveTintColor: "lightgreen",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { backgroundColor: "#262626" }, // замість colors.neutral800
+        tabBarStyle: { backgroundColor: "#262626" }, 
       }}
     >
       <BottomTabs.Screen

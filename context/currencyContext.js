@@ -1,4 +1,3 @@
-// context/CurrencyContext.js
 import React, { createContext, useState } from "react";
 
 export const CurrencyContext = createContext();

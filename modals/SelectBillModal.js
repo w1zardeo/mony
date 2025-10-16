@@ -1,4 +1,3 @@
-// src/screens/SelectBillModal.js
 import React, { useState } from "react";
 import {
   View,

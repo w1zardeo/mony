@@ -23,8 +23,8 @@ export default function CurrencyModal() {
 
   const handleSelect = (item) => {
     setSelected(item.name);
-    setCurrency({ name: item.name, code: item.code }); // оновлюємо контекст
-    navigation.goBack(); // повертаємось назад
+    setCurrency({ name: item.name, code: item.code });
+    navigation.goBack(); 
   };
 
   return (

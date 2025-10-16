@@ -8,28 +8,18 @@ import AddBillsModal from "../modals/AddBillsModal";
 import { CurrencyProvider } from "../context/currencyContext";
 import AddTransactionModal from "../modals/AddTransactionModal";
 import SelectBillModal from "../modals/SelectBillModal";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../store/store";
+import { Provider } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
+    <Provider store={store}> 
+    <PersistGate loading={null} persistor={persistor}>
     <CurrencyProvider>
       <Stack.Navigator>
-        {/* <Stack.Screen
-        name="Bills"
-        component={BillsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Categories"
-        component={CategoriesScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Operation"
-        component={OperationScreen}
-        options={{ headerShown: false }}
-      /> */}
         <Stack.Screen
           name="Tabs"
           component={BottomTabsNavigator}
@@ -40,8 +30,8 @@ export default function AppNavigator() {
           component={CurrencyModal}
           options={{
             headerShown: false,
-            presentation: "modal", // відкриває як модалку
-            animation: "slide_from_bottom", // анімація знизу
+            presentation: "modal",
+            animation: "slide_from_bottom",
           }}
         />
         <Stack.Screen
@@ -54,8 +44,8 @@ export default function AppNavigator() {
           component={AddTransactionModal}
           options={{
             headerShown: false,
-            presentation: "modal", // відкриває як модалку
-            animation: "slide_from_bottom", // анімація знизу
+            presentation: "modal", 
+            animation: "slide_from_bottom", 
           }}
         />
         <Stack.Screen
@@ -63,11 +53,13 @@ export default function AppNavigator() {
           component={SelectBillModal}
           options={{
             headerShown: false,
-            presentation: "modal", // відкриває як модалку
-            animation: "slide_from_bottom", // анімація знизу
+            presentation: "modal", 
+            animation: "slide_from_bottom", 
           }}
         />
       </Stack.Navigator>
     </CurrencyProvider>
+    </PersistGate>
+    </Provider>
   );
 }

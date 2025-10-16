@@ -1,4 +1,3 @@
-// FILE: screens/AddBillsModal.js
 import React, { useState } from "react";
 import {
   View,
@@ -42,8 +41,6 @@ export default function AddBillsModal() {
   const payload = {
     id: Date.now().toString(),
     title: title.trim() || "Новий рахунок",
-    // Зберігаємо баланс як рядок. 
-    // .trim() видаляє зайві пробіли, а || "0" обробляє випадок, коли поле порожнє.
     balance: bill.balance.trim() || "0", 
     currency: currency.name,
     currencyCode: currency.code,
@@ -111,20 +108,6 @@ export default function AddBillsModal() {
             )}
           </TouchableOpacity>
         </View>
-
-        {/* <View style={styles.inputBlock}>
-          <Text style={styles.label}>Опис</Text>
-          <View style={styles.inputBox}>
-            <TextInput
-              value={description}
-              onChangeText={setDescription}
-              placeholder=""
-              placeholderTextColor={"#aaa"}
-              style={[styles.input, { height: 40 }]}
-            />
-          </View>
-        </View> */}
-
         <View style={styles.inputBlock}>
           <Text style={styles.label}>Тип рахунку</Text>
           <View style={styles.rowBox}>
@@ -295,7 +278,6 @@ const styles = StyleSheet.create({
     borderColor: colors.neutral500,
   },
   placeholderStyle: { color: colors.white, fontSize: 16 },
-  // баланс
   balanceBox: {
     flexDirection: "row",
     alignItems: "center",
