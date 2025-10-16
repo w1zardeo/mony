@@ -36,8 +36,6 @@ export default function AddBillsModal() {
     balance: existingBill?.balance?.toString() || "",
   });
   const [image, setImage] = useState(existingBill?.image || null);
-
-  // Встановлюємо валюту з існуючого рахунку при вході в режим редагування
   useEffect(() => {
     if (isEditMode && existingBill.currencyCode && existingBill.currency) {
       setCurrency({ code: existingBill.currencyCode, name: existingBill.currency });

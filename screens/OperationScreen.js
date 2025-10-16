@@ -15,12 +15,14 @@ export default function OperationsScreen() {
 
   const reversedTransactions = [...transactions].reverse();
 
-  const convertToUAH = (amount, currencyCode) => {
+   const convertToUAH = (amount, currencyCode) => {
     const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
+    const numericAmount = Number(amount) || 0;
+
     if (!currency || currency.code === "UAH") {
-      return Number(String(amount).replace(",", ".")) || 0;
+      return numericAmount;
     }
-    return (Number(String(amount).replace(",", ".")) || 0) * currency.rateToUAH;
+    return numericAmount * currency.rateToUAH;
   };
 
   const totalBalance = bills.reduce((sum, bill) => {
