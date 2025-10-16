@@ -27,8 +27,20 @@ const billsSlice = createSlice({
         billToUpdate.balance = newBalance.toFixed(2);
       }
     },
+    
+    updateBill: (state, action) => {
+      const index = state.list.findIndex(bill => bill.id === action.payload.id);
+      if (index !== -1) {
+        state.list[index] = action.payload;
+      }
+    },
+    deleteBill: (state, action) => {
+      state.list = state.list.filter(bill => bill.id !== action.payload.id);
+    },
   },
 });
 
-export const { addBill, setSelectedBill, updateBillBalance } = billsSlice.actions;
+// 👇 ОНОВЛЕНО: додаємо нові екшени до експорту
+export const { addBill, setSelectedBill, updateBillBalance, updateBill, deleteBill } = billsSlice.actions;
+
 export default billsSlice.reducer;

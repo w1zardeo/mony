@@ -12,7 +12,6 @@ import { colors } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { CURRENCIES_DATA } from "../constants/currency";
-import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
 import { billsType } from "../constants/data";
 
@@ -99,12 +98,12 @@ export default function BillsScreen() {
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionTitle}>{type.label}</Text>
                   <Text style={styles.sectionAmount}>
-                    {groupedBills[type.value]
+                    {(groupedBills[type.value] || [])
                       .reduce(
                         (sum, item) =>
                           sum + convertToUAH(item.balance, item.currencyCode),
                         0
-                      )}{" "}
+                      ).toFixed(2)}{" "}
                     ₴
                   </Text>
                 </View>
@@ -114,36 +113,33 @@ export default function BillsScreen() {
                   keyExtractor={(item) => item.id.toString()}
                   scrollEnabled={false}
                   renderItem={({ item }) => (
-                    <View style={styles.billsCard}>
-                      <View
-                        style={{ alignItems: "center", marginRight: 12 }}
-                      >
-                        <View style={styles.billsIcon}>
-                          {item.image ? (
-                            <Image
-                              source={{ uri: item.image }}
-                              style={styles.billsImage}
-                            />
-                          ) : (
-                            <Text style={styles.billsIconText}>+</Text>
-                          )}
+                    <TouchableOpacity onPress={() => navigation.navigate('AddBillsModal', { bill: item })}>
+                      <View style={styles.billsCard}>
+                        <View
+                          style={{ alignItems: "center" }}
+                        >
+                          <View style={styles.billsIcon}>
+                            {item.image ? (
+                              <Image
+                                source={{ uri: item.image }}
+                                style={styles.billsImage}
+                              />
+                            ) : (
+                              <Text style={styles.billsIconText}>+</Text>
+                            )}
+                          </View>
                         </View>
-                        {item.description && (
-                          <Text style={styles.description}>
-                            {item.description}
-                          </Text>
-                        )}
-                      </View>
 
-                      <View style={styles.billsInfo}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.billsAmount}>
-                          {item.balance +
-                            " " +
-                            (item.currencyCode || "₴")}
-                        </Text>
+                        <View style={styles.billsInfo}>
+                          <Text style={styles.title}>{item.title}</Text>
+                          <Text style={styles.billsAmount}>
+                            {Number(item.balance).toFixed(2) +
+                              " " +
+                              (item.currencyCode || "₴")}
+                          </Text>
+                        </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   )}
                 />
 
@@ -152,7 +148,6 @@ export default function BillsScreen() {
                   activeOpacity={0.8}
                   onPress={() =>
                     navigation.navigate("AddBillsModal", {
-                      selectedCurrency: { name: "Українська гривня" },
                       defaultType: type.value,
                     })
                   }
@@ -281,34 +276,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
-  },
-  addIcon: { color: colors.white, fontSize: 26 },
-  addText: { color: colors.white, fontSize: 16 },
-  savingCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.lightBlack,
-    padding: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 12,
-  },
-  savingIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 10,
-    backgroundColor: "#0F2A3B",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  savingIconText: { color: colors.white },
-  savingInfo: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   emptyState: { marginTop: 30, alignItems: "center" },
   emptyText: { color: colors.white },
