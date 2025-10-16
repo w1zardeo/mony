@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalWrapper from "../components/ModalWrapper";
 import { colors } from "../theme/colors";
 import { addTransaction } from "../store/transactionsSlice";
-import { nanoid } from "@reduxjs/toolkit";
 import { updateBillBalance } from "../store/billsSlice";
+import { CURRENCIES_DATA } from "../constants/currency";
 
 const CalcButton = ({ value, onPress }) => (
     <TouchableOpacity style={styles.calcButton} onPress={() => onPress(value)}>
@@ -38,14 +38,13 @@ export default function AddTransactionModal({ route }) {
       alert("Будь ласка, оберіть рахунок");
       return;
     }
-
-    const finalAmount = parseFloat(amount.replace(",", "."));
-    if (isNaN(finalAmount) || finalAmount === 0) return;
+    const finalAmountInUAH = parseFloat(amount.replace(",", "."));
+    if (isNaN(finalAmountInUAH) || finalAmountInUAH === 0) return;
 
     const transaction = {
-      id: nanoid(),
+      id: Date.now().toString(),
       title: category?.name || "Інше",
-      amount: finalAmount,
+      amount: finalAmountInUAH,
       billId: selectedBill.id,
       billTitle: selectedBill.title,
       createdAt: new Date().toISOString(),
@@ -54,12 +53,20 @@ export default function AddTransactionModal({ route }) {
 
     dispatch(addTransaction(transaction));
 
-    const amountToUpdate = transactionType === 'income' ? finalAmount : -finalAmount;
+    let amountToUpdate = finalAmountInUAH;
+
+    if (selectedBill.currencyCode && selectedBill.currencyCode !== 'UAH') {
+      const currency = CURRENCIES_DATA.find(category => category.code === selectedBill.currencyCode);
+      if (currency && currency.rateToUAH > 0) {
+        amountToUpdate = finalAmountInUAH / currency.rateToUAH;
+      }
+    }
+    const finalAmountForBill = transactionType === 'income' ? amountToUpdate : -amountToUpdate;
 
     dispatch(
       updateBillBalance({
         billId: selectedBill.id,
-        amount: amountToUpdate,
+        amount: finalAmountForBill,
       })
     );
 
@@ -68,7 +75,6 @@ export default function AddTransactionModal({ route }) {
   
   const AccountSelector = () => (
     <View style={styles.selectorBox}>
-      {/* Текст змінюється залежно від типу */}
       <Text style={styles.selectorTitle}>
         {transactionType === 'income' ? 'До рахунку' : 'З рахунку'}
       </Text>
@@ -190,4 +196,4 @@ const styles = StyleSheet.create({
       backgroundColor: "#3478F6",
       borderRadius: 12,
     },
-  });
+});
