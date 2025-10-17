@@ -47,7 +47,7 @@ export default function AddTransactionModal({ route }) {
       amount: finalAmountInUAH,
       billId: selectedBill.id,
       billTitle: selectedBill.title,
-      createdAt: new Date().toISOString(),
+      date: new Date().toISOString(),
       type: transactionType, 
     };
 
