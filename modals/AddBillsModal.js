@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Image,
   Alert,
 } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
@@ -17,8 +16,12 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { CurrencyContext } from "../context/currencyContext";
 import { useDispatch } from "react-redux";
 import { addBill, updateBill, deleteBill } from "../store/billsSlice";
-import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { ALL_ICONS_LIST, getRandomColor } from "../constants/icons"; 
+
+const getRandomIcon = () => {
+  return ALL_ICONS_LIST[Math.floor(Math.random() * ALL_ICONS_LIST.length)];
+};
 
 export default function AddBillsModal() {
   const route = useRoute();
@@ -35,37 +38,44 @@ export default function AddBillsModal() {
     type: existingBill?.type || route.params?.defaultType || "usual",
     balance: existingBill?.balance?.toString() || "",
   });
-  const [image, setImage] = useState(existingBill?.image || null);
+  
+  const [icon, setIcon] = useState(existingBill?.icon || getRandomIcon());
+  const [color, setColor] = useState(existingBill?.color || getRandomColor()); 
+
   useEffect(() => {
     if (isEditMode && existingBill.currencyCode && existingBill.currency) {
       setCurrency({ code: existingBill.currencyCode, name: existingBill.currency });
     }
   }, []);
 
+  useEffect(() => {
+    if (route.params?.selectedIcon) {
+      setIcon(route.params.selectedIcon);
+      navigation.setParams({ selectedIcon: null });
+    }
+    if (route.params?.selectedColor) {
+      setColor(route.params.selectedColor);
+      navigation.setParams({ selectedColor: null });
+    }
+  }, [route.params?.selectedIcon, route.params?.selectedColor, navigation]); 
+
+
   const onSave = () => {
     const balanceValue = bill.balance.replace(',', '.').trim() || "0";
+    const payload = {
+      id: isEditMode ? existingBill.id : Date.now().toString(),
+      title: title.trim() || "Новий рахунок",
+      balance: balanceValue,
+      currency: currency.name,
+      currencyCode: currency.code,
+      type: bill.type || "usual",
+      icon: icon,
+      color: color, 
+    };
 
     if (isEditMode) {
-      const payload = {
-        ...existingBill,
-        title: title.trim() || "Новий рахунок",
-        balance: balanceValue,
-        currency: currency.name,
-        currencyCode: currency.code,
-        type: bill.type,
-        image: image,
-      };
       dispatch(updateBill(payload));
     } else {
-      const payload = {
-        id: Date.now().toString(),
-        title: title.trim() || "Новий рахунок",
-        balance: balanceValue,
-        currency: currency.name,
-        currencyCode: currency.code,
-        type: bill.type || "usual",
-        image: image || null,
-      };
       dispatch(addBill(payload));
     }
     navigation.goBack();
@@ -87,23 +97,6 @@ export default function AddBillsModal() {
         },
       ]
     );
-  };
-
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.status !== "granted") {
-      alert("Потрібен дозвіл на доступ до галереї!");
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
   };
 
   return (
@@ -129,17 +122,33 @@ export default function AddBillsModal() {
           </View>
         </View>
 
+        {/* Блок вибору іконки */}
         <View style={styles.iconBlock}>
-          <Text style={styles.iconLabel}>Картинка</Text>
-          <TouchableOpacity style={styles.iconRightBox} onPress={pickImage}>
-            {image ? (
-              <Image source={{ uri: image }} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>Іконка</Text>
+          <TouchableOpacity 
+            style={[styles.iconRightBox, { backgroundColor: color }]} 
+            onPress={() => navigation.navigate("IconPickerModal")}
+          >
+            {icon ? (
+              <Ionicons name={icon} size={28} color={colors.white} /> 
             ) : (
               <Ionicons name="image-outline" size={24} color={colors.white} />
             )}
           </TouchableOpacity>
         </View>
 
+        {/* Блок: Вибір кольору */}
+        <View style={styles.iconBlock}>
+          <Text style={styles.iconLabel}>Колір</Text>
+          <TouchableOpacity 
+            style={styles.colorRightBox}
+            onPress={() => navigation.navigate("ColorPickerModal")}
+          >
+            <View style={[styles.colorPreview, { backgroundColor: color }]} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Тип рахунку */}
         <View style={styles.inputBlock}>
           <Text style={styles.label}>Тип рахунку</Text>
           <View style={styles.rowBox}>
@@ -162,6 +171,7 @@ export default function AddBillsModal() {
           </View>
         </View>
 
+        {/* Валюта */}
         <TouchableOpacity onPress={() => navigation.navigate("CurrencyModal")}>
           <View style={styles.inputBlock}>
             <Text style={styles.label}>Валюта рахунку</Text>
@@ -171,6 +181,7 @@ export default function AddBillsModal() {
           </View>
         </TouchableOpacity>
 
+        {/* Баланс */}
         <View style={styles.inputBlock}>
           <Text style={styles.label}>Поточний баланс</Text>
           <View style={styles.balanceBox}>
@@ -188,6 +199,7 @@ export default function AddBillsModal() {
         
         <View style={{ height: 20 }} />
 
+        {/* Кнопки */}
         <TouchableOpacity style={styles.saveButton} onPress={onSave} activeOpacity={0.8}>
           <Text style={styles.saveText}>{isEditMode ? 'Зберегти' : 'Створити'}</Text>
         </TouchableOpacity>
@@ -220,7 +232,25 @@ const styles = StyleSheet.create({
   valueText: { color: colors.white, fontSize: 16, fontWeight: "600", paddingRight: 10 },
   iconBlock: { marginTop: 12, flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#3A3A3C", borderRadius: 12, overflow: "hidden", height: 56, backgroundColor: colors.black, justifyContent: "space-between", paddingLeft: 14 },
   iconLabel: { color: "#fff", fontSize: 16, fontWeight: "600", paddingLeft: 15 },
-  iconRightBox: { width: 56, height: "100%", justifyContent: "center", alignItems: "center" },
+  iconRightBox: { 
+    width: 56, 
+    height: "100%", 
+    justifyContent: "center", 
+    alignItems: "center",
+  },
+  colorRightBox: {
+    width: 56, 
+    height: "100%", 
+    justifyContent: "center", 
+    alignItems: "center",
+  },
+  colorPreview: {
+    width: 32,
+    height: 32,
+    borderRadius: 16, 
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.7)',
+  },
   dropdownContainer: { height: 54, borderWidth: 1, borderColor: "#d4d4d4", paddingHorizontal: 15, borderRadius: 15 },
   dropdownSelectedText: { color: colors.white, fontSize: 16 },
   dropdownItemText: { color: colors.white },
@@ -232,7 +262,6 @@ const styles = StyleSheet.create({
   currencyText: { color: colors.white, fontSize: 16, fontWeight: "600", marginLeft: 6 },
   saveButton: { marginTop: 12, backgroundColor: colors.green, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   saveText: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  iconImage: { width: "100%", height: "100%", borderRadius: 12 },
   deleteButton: { marginTop: 12, backgroundColor: '#D93F3F', paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   deleteText: { color: colors.white, fontWeight: "600", fontSize: 16 },
 });

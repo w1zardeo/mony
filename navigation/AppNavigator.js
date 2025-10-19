@@ -12,6 +12,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../store/store";
 import { Provider } from "react-redux";
 import AddCategoryModal from "../modals/AddCategoryModal";
+import IconPickerModal from "../modals/IconPickerModal";
+import ColorPickerModal from "../modals/ColorPickerModal";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +45,16 @@ export default function AppNavigator() {
         <Stack.Screen
           name="AddCategoryModal"
           component={AddCategoryModal}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="IconPickerModal"
+          component={IconPickerModal}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ColorPickerModal"
+          component={ColorPickerModal}
           options={{ headerShown: false }}
         />
         <Stack.Screen

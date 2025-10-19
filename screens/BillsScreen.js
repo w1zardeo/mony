@@ -12,7 +12,7 @@ import { colors } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { CURRENCIES_DATA } from "../constants/currency";
-import { Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { billsType } from "../constants/data";
 
 function TabButton({ title, active, onPress }) {
@@ -118,14 +118,25 @@ export default function BillsScreen() {
                         <View
                           style={{ alignItems: "center" }}
                         >
-                          <View style={styles.billsIcon}>
-                            {item.image ? (
-                              <Image
-                                source={{ uri: item.image }}
-                                style={styles.billsImage}
+                          {/* Динамічний колір фону */}
+                          <View 
+                            style={[
+                              styles.billsIcon, 
+                              { backgroundColor: item.color || '#0F2A3B' } 
+                            ]}
+                          >
+                            {item.icon ? (
+                              <Ionicons 
+                                name={item.icon} 
+                                size={24} 
+                                color={colors.white} 
                               />
                             ) : (
-                              <Text style={styles.billsIconText}>+</Text>
+                              <Ionicons 
+                                name="wallet-outline" 
+                                size={24} 
+                                color={colors.white} 
+                              />
                             )}
                           </View>
                         </View>
@@ -243,7 +254,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 10,
-    backgroundColor: "#0F2A3B",
+    backgroundColor: "#0F2A3B", 
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
@@ -279,9 +290,4 @@ const styles = StyleSheet.create({
   },
   emptyState: { marginTop: 30, alignItems: "center" },
   emptyText: { color: colors.white },
-  billsImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-  }
 });
