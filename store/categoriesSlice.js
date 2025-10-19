@@ -1,4 +1,3 @@
-// store/categoriesSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import { categoriesData, incomeCategoriesData } from "../constants/categories";
 
@@ -23,15 +22,12 @@ export const categoriesSlice = createSlice({
       const updatedCategory = action.payload;
       const list = updatedCategory.type === "expense" ? "expense" : "income";
       
-      // Перевірка, чи не змінився тип
       const otherList = updatedCategory.type === "expense" ? "income" : "expense";
       const oldIndexOther = state[otherList].findIndex(c => c.id === updatedCategory.id);
       if (oldIndexOther !== -1) {
-         // Тип змінився, видаляємо зі старого списку і додаємо в новий
          state[otherList].splice(oldIndexOther, 1);
          state[list].push(updatedCategory);
       } else {
-         // Тип не змінився, просто оновлюємо
          const index = state[list].findIndex(c => c.id === updatedCategory.id);
          if (index !== -1) {
            state[list][index] = updatedCategory;
@@ -40,7 +36,6 @@ export const categoriesSlice = createSlice({
     },
     deleteCategory: (state, action) => {
       const { id } = action.payload;
-      // Потрібно шукати в обох масивах, оскільки ми можемо не знати тип при видаленні
       let index = state.expense.findIndex(c => c.id === id);
       if (index !== -1) {
         state.expense.splice(index, 1);

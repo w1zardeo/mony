@@ -40,7 +40,6 @@ const billsSlice = createSlice({
   },
 });
 
-// 👇 ОНОВЛЕНО: додаємо нові екшени до експорту
 export const { addBill, setSelectedBill, updateBillBalance, updateBill, deleteBill } = billsSlice.actions;
 
 export default billsSlice.reducer;

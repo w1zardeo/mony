@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   placeholderStyle: { color: colors.white, fontSize: 16 },
   saveButton: { marginTop: 12, backgroundColor: colors.green, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   saveText: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  iconImage: { width: 40, height: 40, borderRadius: 8 }, // Змінено стиль для картинки
+  iconImage: { width: 40, height: 40, borderRadius: 8 },
   deleteButton: { marginTop: 12, backgroundColor: '#D93F3F', paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   deleteText: { color: colors.white, fontWeight: "600", fontSize: 16 },
   colorPalette: {
