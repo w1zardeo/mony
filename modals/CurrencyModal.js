@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
+} from "react-native"
 import ModalWrapper from "../components/ModalWrapper";
 import { colors } from "../theme/colors";
 import { CURRENCIES_DATA } from "../constants/currency";
@@ -20,12 +20,26 @@ export default function CurrencyModal() {
   const { currency, setCurrency } = useContext(CurrencyContext);
 
   const [selected, setSelected] = useState(currency.name);
+  const [search, setSearch] = useState('');
 
   const handleSelect = (item) => {
     setSelected(item.name);
     setCurrency({ name: item.name, code: item.code });
     navigation.goBack(); 
   };
+
+  const filteredCurrencies = CURRENCIES_DATA.filter((item) => {
+    if (search.length > 1) {
+        if (
+            item.code?.toLowerCase()?.includes(search?.toLowerCase()) ||
+            item.name?.toLowerCase()?.includes(search?.toLowerCase()) 
+        ) {
+            return true;
+        }
+        return false;
+    }
+    return true;
+  })
 
   return (
     <ModalWrapper style={{ backgroundColor: colors.black }}>
@@ -40,12 +54,13 @@ export default function CurrencyModal() {
             placeholder="Назва або код"
             placeholderTextColor={colors.white}
             style={styles.textInput}
+            onChangeText={setSearch}
           />
         </View>
 
         <ScrollView contentContainerStyle={styles.listContainer}>
           <Text style={styles.sectionTitle}>Основні валюти</Text>
-          {CURRENCIES_DATA.map((item) => (
+          {filteredCurrencies.map((item) => (
             <TouchableOpacity
               key={item.code}
               style={styles.row}

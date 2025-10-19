@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import billsReducer from "./billsSlice";
 import currencyReducer from "./currencySlice";
 import transactionReducer from './transactionsSlice';
+import categoriesReducer from './categoriesSlice';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   persistStore,
@@ -17,13 +18,14 @@ import {
 export const rootReducer = combineReducers({
     bills: billsReducer,
     currency: currencyReducer,
-    transactions: transactionReducer
+    transactions: transactionReducer,
+    categories: categoriesReducer
 });
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['bills', 'currency', 'transactions']
+  whitelist: ['bills', 'currency', 'transactions', 'categories']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

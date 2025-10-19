@@ -11,6 +11,7 @@ import SelectBillModal from "../modals/SelectBillModal";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../store/store";
 import { Provider } from "react-redux";
+import AddCategoryModal from "../modals/AddCategoryModal";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,11 @@ export default function AppNavigator() {
         <Stack.Screen
           name="AddBillsModal"
           component={AddBillsModal}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddCategoryModal"
+          component={AddCategoryModal}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -18,7 +18,7 @@ const CalcButton = ({ value, onPress }) => (
 export default function AddTransactionModal({ route }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { category } = route.params; 
+  const { category, selectedDate } = route.params; 
   
   const transactionType = category?.type || 'expense';
 
@@ -47,7 +47,7 @@ export default function AddTransactionModal({ route }) {
       amount: finalAmountInUAH,
       billId: selectedBill.id,
       billTitle: selectedBill.title,
-      date: new Date().toISOString(),
+      date: selectedDate, 
       type: transactionType, 
     };
 
@@ -80,7 +80,7 @@ export default function AddTransactionModal({ route }) {
       </Text>
       <TouchableOpacity
         style={styles.selectorValueWrapper}
-        onPress={() => navigation.navigate("SelectBillModal")}
+        onPress={() => navigation.navigate("SelectBillModal", { isSelecting: true })}
       >
         <Icon name="card-outline" size={20} color={colors.white} />
         <Text style={styles.selectorValue}>

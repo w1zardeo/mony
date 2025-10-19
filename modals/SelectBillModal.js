@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { colors } from "../theme/colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { CURRENCIES_DATA } from "../constants/currency";
 import { billsType } from "../constants/data";
@@ -38,7 +38,8 @@ export default function SelectBillModal() {
   const navigation = useNavigation();
 
   const billsFromRedux = useSelector((state) => state.bills.list || []);
-  const listToRender = billsFromRedux;
+  const route = useRoute();
+  const isSelecting = route.params?.isSelecting || false;
 
   const convertToUAH = (amount, currencyCode) => {
     const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
@@ -149,16 +150,17 @@ export default function SelectBillModal() {
                   )}
                 />
 
-                <TouchableOpacity
-                  style={styles.addBlock}
-                  activeOpacity={0.8}
-                  onPress={() =>
-                    navigation.navigate("AddBillsModal", {
-                      selectedCurrency: { name: "Українська гривня" },
-                      defaultType: type.value,
-                    })
-                  }
-                >
+                {!isSelecting && (
+                  <TouchableOpacity
+                    style={styles.addBlock}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      navigation.navigate("AddBillsModal", {
+                        selectedCurrency: { name: "Українська гривня" },
+                        defaultType: type.value,
+                      })
+                    }
+                  >
                   <View style={styles.addIconBox}>
                     <Text style={styles.billsIconText}>+</Text>
                   </View>
@@ -166,6 +168,7 @@ export default function SelectBillModal() {
                     <Text style={styles.title}>Додати {type.label.toLowerCase()}</Text>
                   </View>
                 </TouchableOpacity>
+                )}
               </View>
             ))}
           </View>
