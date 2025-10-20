@@ -118,7 +118,6 @@ export default function BillsScreen() {
                         <View
                           style={{ alignItems: "center" }}
                         >
-                          {/* Динамічний колір фону */}
                           <View 
                             style={[
                               styles.billsIcon, 

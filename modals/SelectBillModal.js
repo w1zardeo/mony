@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-  Image,
 } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { colors } from "../theme/colors";
@@ -16,6 +15,7 @@ import { CURRENCIES_DATA } from "../constants/currency";
 import { billsType } from "../constants/data";
 import { useDispatch } from "react-redux";
 import { setSelectedBill } from "../store/billsSlice";
+import { Ionicons } from "@expo/vector-icons"; 
 
 function TabButton({ title, active, onPress }) {
   return (
@@ -62,21 +62,11 @@ export default function SelectBillModal() {
     navigation.goBack();
   };
 
-
-
   return (
     <ScreenWrapper style={styles.wrapper}>
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header - як у BillsScreen, але без total */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Рахунки</Text>
-
-          <TouchableOpacity
-            style={styles.plusCircle}
-            onPress={() => navigation.navigate("AddBillsModal")}
-          >
-            <Text style={styles.plusText}>+</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.tabsRow}>
@@ -125,18 +115,30 @@ export default function SelectBillModal() {
                       onPress={() => handleSelectBill(item)}
                     >
                       <View style={{ alignItems: "center", marginRight: 12 }}>
-                        <View style={styles.billsIcon}>
-                          {item.image ? (
-                            <Image
-                              source={{ uri: item.image }}
-                              style={styles.billsImage}
+                        <View
+                          style={[
+                            styles.billsIcon,
+                            { backgroundColor: item.color || "#0F2A3B" },
+                          ]}
+                        >
+                          {item.icon ? (
+                            <Ionicons
+                              name={item.icon}
+                              size={24}
+                              color={colors.white}
                             />
                           ) : (
-                            <Text style={styles.billsIconText}>+</Text>
+                            <Ionicons
+                              name="wallet-outline"
+                              size={24}
+                              color={colors.white}
+                            />
                           )}
                         </View>
                         {item.description && (
-                          <Text style={styles.description}>{item.description}</Text>
+                          <Text style={styles.description}>
+                            {item.description}
+                          </Text>
                         )}
                       </View>
 
@@ -161,13 +163,15 @@ export default function SelectBillModal() {
                       })
                     }
                   >
-                  <View style={styles.addIconBox}>
-                    <Text style={styles.billsIconText}>+</Text>
-                  </View>
-                  <View style={styles.billsInfo}>
-                    <Text style={styles.title}>Додати {type.label.toLowerCase()}</Text>
-                  </View>
-                </TouchableOpacity>
+                    <View style={styles.addIconBox}>
+                      <Text style={styles.billsIconText}>+</Text>
+                    </View>
+                    <View style={styles.billsInfo}>
+                      <Text style={styles.title}>
+                        Додати {type.label.toLowerCase()}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 )}
               </View>
             ))}
@@ -176,13 +180,17 @@ export default function SelectBillModal() {
 
         {tab === "debts" && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>Тут поки що нічого немає — Борги</Text>
+            <Text style={styles.emptyText}>
+              Тут поки що нічого немає — Борги
+            </Text>
           </View>
         )}
 
         {tab === "total" && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>Тут поки що нічого немає — Всього</Text>
+            <Text style={styles.emptyText}>
+              Тут поки що нічого немає — Всього
+            </Text>
           </View>
         )}
       </ScrollView>
@@ -193,20 +201,10 @@ export default function SelectBillModal() {
 const styles = StyleSheet.create({
   wrapper: { paddingHorizontal: 16, backgroundColor: colors.black },
   container: { paddingBottom: 40 },
-  header: { alignItems: "center", marginBottom: 12 },
+  header: { alignItems: "center", marginBottom: 12, 
+    justifyContent: "center", height: 50 
+  }, 
   headerTitle: { color: colors.white, fontSize: 20, fontWeight: "600" },
-  plusCircle: {
-    position: "absolute",
-    right: 18,
-    top: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: colors.gray,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  plusText: { color: colors.lightGray, fontSize: 24 },
   tabsRow: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -246,10 +244,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 10,
-    backgroundColor: "#0F2A3B",
+    backgroundColor: "#0F2A3B", 
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
   },
   billsIconText: { color: colors.white, fontSize: 22 },
   billsInfo: {
@@ -284,10 +281,5 @@ const styles = StyleSheet.create({
   addText: { color: colors.white, fontSize: 16 },
   emptyState: { marginTop: 30, alignItems: "center" },
   emptyText: { color: colors.white },
-  billsImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 10,
-  },
   description: { color: colors.lightGray, fontSize: 12, marginTop: 6 },
 });

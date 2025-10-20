@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; 
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Image,
   Alert,
 } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
@@ -15,13 +14,17 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { addCategory, updateCategory, deleteCategory } from "../store/categoriesSlice";
-import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { ALL_ICONS_LIST, getRandomColor } from "../constants/icons"; 
 
 const categoryTypes = [
   { label: "Витрати", value: "expense" },
   { label: "Доходи", value: "income" },
 ];
+
+const getRandomIcon = () => {
+  return ALL_ICONS_LIST[Math.floor(Math.random() * ALL_ICONS_LIST.length)];
+};
 
 
 export default function AddCategoryModal() {
@@ -33,10 +36,23 @@ export default function AddCategoryModal() {
   const isEditMode = !!existingCategory;
 
   const [title, setTitle] = useState(existingCategory?.name || "");
-  const [image, setImage] = useState(existingCategory?.image || null);
   const [type, setType] = useState(
     existingCategory?.type || route.params?.defaultType || "expense"
   );
+  
+  const [icon, setIcon] = useState(existingCategory?.icon || getRandomIcon());
+  const [color, setColor] = useState(existingCategory?.color || getRandomColor());
+
+  useEffect(() => {
+    if (route.params?.selectedIcon) {
+      setIcon(route.params.selectedIcon);
+      navigation.setParams({ selectedIcon: null });
+    }
+    if (route.params?.selectedColor) {
+      setColor(route.params.selectedColor);
+      navigation.setParams({ selectedColor: null });
+    }
+  }, [route.params?.selectedIcon, route.params?.selectedColor, navigation]);
 
   const onSave = () => {
     if (isEditMode) {
@@ -44,8 +60,8 @@ export default function AddCategoryModal() {
         ...existingCategory,
         name: title.trim() || "Нова категорія",
         type: type,
-        image: image,
-        icon: image ? null : existingCategory.icon 
+        icon: icon,
+        color: color,
       };
       dispatch(updateCategory(payload));
     } else {
@@ -53,8 +69,8 @@ export default function AddCategoryModal() {
         id: Date.now().toString(),
         name: title.trim() || "Нова категорія",
         type: type,
-        image: image || null,
-        icon: image ? null : "help-outline", 
+        icon: icon,
+        color: color,
       };
       dispatch(addCategory(payload));
     }
@@ -77,23 +93,6 @@ export default function AddCategoryModal() {
         },
       ]
     );
-  };
-
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.status !== "granted") {
-      alert("Потрібен дозвіл на доступ до галереї!");
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
   };
 
   return (
@@ -120,13 +119,26 @@ export default function AddCategoryModal() {
         </View>
 
         <View style={styles.iconBlock}>
-          <Text style={styles.iconLabel}>Картинка</Text>
-          <TouchableOpacity style={styles.iconRightBox} onPress={pickImage}>
-            {image ? (
-              <Image source={{ uri: image }} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>Іконка</Text>
+          <TouchableOpacity 
+            style={[styles.iconRightBox, { backgroundColor: color }]} 
+            onPress={() => navigation.navigate("IconPickerModalCategories")}
+          >
+            {icon ? (
+              <Ionicons name={icon} size={28} color={colors.white} /> 
             ) : (
-               <Ionicons name={isEditMode ? (existingCategory.icon || "image-outline") : "image-outline"} size={24} color={colors.white} />
+              <Ionicons name="image-outline" size={24} color={colors.white} />
             )}
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.iconBlock}>
+          <Text style={styles.iconLabel}>Колір</Text>
+          <TouchableOpacity 
+            style={styles.colorRightBox}
+            onPress={() => navigation.navigate("ColorPickerModalCategories")}
+          >
+            <View style={[styles.colorPreview, { backgroundColor: color }]} />
           </TouchableOpacity>
         </View>
 
@@ -185,6 +197,19 @@ const styles = StyleSheet.create({
   iconBlock: { marginTop: 12, flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#3A3A3C", borderRadius: 12, overflow: "hidden", height: 56, backgroundColor: colors.black, justifyContent: "space-between", paddingLeft: 14 },
   iconLabel: { color: "#fff", fontSize: 16, fontWeight: "600", paddingLeft: 15 },
   iconRightBox: { width: 56, height: "100%", justifyContent: "center", alignItems: "center" },
+  colorRightBox: {
+    width: 56, 
+    height: "100%", 
+    justifyContent: "center", 
+    alignItems: "center",
+  },
+  colorPreview: {
+    width: 32,
+    height: 32,
+    borderRadius: 16, 
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.7)',
+  },
   dropdownContainer: { height: 54, borderWidth: 1, borderColor: "#d4d4d4", paddingHorizontal: 15, borderRadius: 15 },
   dropdownSelectedText: { color: colors.white, fontSize: 16 },
   dropdownItemText: { color: colors.white },
@@ -193,7 +218,6 @@ const styles = StyleSheet.create({
   placeholderStyle: { color: colors.white, fontSize: 16 },
   saveButton: { marginTop: 12, backgroundColor: colors.green, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   saveText: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  iconImage: { width: 40, height: 40, borderRadius: 8 },
   deleteButton: { marginTop: 12, backgroundColor: '#D93F3F', paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   deleteText: { color: colors.white, fontWeight: "600", fontSize: 16 },
   colorPalette: {

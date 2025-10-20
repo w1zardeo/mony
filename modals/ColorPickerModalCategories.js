@@ -12,11 +12,11 @@ import { colors } from "../theme/colors";
 import { COLOR_LIST } from "../constants/icons";
 import ScreenWrapper from "../components/ScreenWrapper";
 
-export default function ColorPickerModal() {
+export default function ColorPickerModalCategories() {
   const navigation = useNavigation();
 
   const onColorPress = (colorValue) => {
-    navigation.popTo("AddBillsModal", { selectedColor: colorValue });
+    navigation.popTo("AddCategoryModal", { selectedColor: colorValue });
   };
 
   return (

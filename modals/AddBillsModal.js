@@ -122,12 +122,11 @@ export default function AddBillsModal() {
           </View>
         </View>
 
-        {/* Блок вибору іконки */}
         <View style={styles.iconBlock}>
           <Text style={styles.iconLabel}>Іконка</Text>
           <TouchableOpacity 
             style={[styles.iconRightBox, { backgroundColor: color }]} 
-            onPress={() => navigation.navigate("IconPickerModal")}
+            onPress={() => navigation.navigate("IconPickerModal", { sourceScreen: route.name })}
           >
             {icon ? (
               <Ionicons name={icon} size={28} color={colors.white} /> 
@@ -137,18 +136,16 @@ export default function AddBillsModal() {
           </TouchableOpacity>
         </View>
 
-        {/* Блок: Вибір кольору */}
         <View style={styles.iconBlock}>
           <Text style={styles.iconLabel}>Колір</Text>
           <TouchableOpacity 
             style={styles.colorRightBox}
-            onPress={() => navigation.navigate("ColorPickerModal")}
+            onPress={() => navigation.navigate("ColorPickerModal", { sourceScreen: route.name })}
           >
             <View style={[styles.colorPreview, { backgroundColor: color }]} />
           </TouchableOpacity>
         </View>
 
-        {/* Тип рахунку */}
         <View style={styles.inputBlock}>
           <Text style={styles.label}>Тип рахунку</Text>
           <View style={styles.rowBox}>
@@ -171,7 +168,6 @@ export default function AddBillsModal() {
           </View>
         </View>
 
-        {/* Валюта */}
         <TouchableOpacity onPress={() => navigation.navigate("CurrencyModal")}>
           <View style={styles.inputBlock}>
             <Text style={styles.label}>Валюта рахунку</Text>
@@ -181,7 +177,6 @@ export default function AddBillsModal() {
           </View>
         </TouchableOpacity>
 
-        {/* Баланс */}
         <View style={styles.inputBlock}>
           <Text style={styles.label}>Поточний баланс</Text>
           <View style={styles.balanceBox}>
@@ -199,7 +194,6 @@ export default function AddBillsModal() {
         
         <View style={{ height: 20 }} />
 
-        {/* Кнопки */}
         <TouchableOpacity style={styles.saveButton} onPress={onSave} activeOpacity={0.8}>
           <Text style={styles.saveText}>{isEditMode ? 'Зберегти' : 'Створити'}</Text>
         </TouchableOpacity>

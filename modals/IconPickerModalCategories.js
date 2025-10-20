@@ -12,11 +12,11 @@ import { colors } from "../theme/colors";
 import { iconCategories } from "../constants/icons";
 import ScreenWrapper from "../components/ScreenWrapper";
 
-export default function IconPickerModal() {
+export default function IconPickerModalCategories() {
   const navigation = useNavigation();
 
   const onIconPress = (iconName) => {
-    navigation.popTo("AddBillsModal", { selectedIcon: iconName });
+    navigation.popTo("AddCategoryModal", { selectedIcon: iconName });
   };
 
   return (
@@ -56,7 +56,7 @@ export default function IconPickerModal() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: colors.black, 
+    backgroundColor: colors.black,
   },
   header: {
     flexDirection: "row",
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   iconGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
+    justifyContent: "flex-start", 
   },
   iconButton: {
     width: "20%", 
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#3A3A3C", 
+    borderColor: "#3A3A3C",
     margin: "2.5%", 
-    backgroundColor: "#1C1C1E", 
+    backgroundColor: "#1C1C1E",
   },
 });

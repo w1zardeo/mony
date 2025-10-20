@@ -14,6 +14,8 @@ import { Provider } from "react-redux";
 import AddCategoryModal from "../modals/AddCategoryModal";
 import IconPickerModal from "../modals/IconPickerModal";
 import ColorPickerModal from "../modals/ColorPickerModal";
+import IconPickerModalCategories from "../modals/IconPickerModalCategories";
+import ColorPickerModalCategories from "../modals/ColorPickerModalCategories";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +57,16 @@ export default function AppNavigator() {
         <Stack.Screen
           name="ColorPickerModal"
           component={ColorPickerModal}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="IconPickerModalCategories"
+          component={IconPickerModalCategories}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ColorPickerModalCategories"
+          component={ColorPickerModalCategories}
           options={{ headerShown: false }}
         />
         <Stack.Screen
