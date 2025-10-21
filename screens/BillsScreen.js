@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { billsType } from "../constants/data";
 import { convertToUAH } from "../features/functions";
+import { useTotalBalance } from "../hooks/useTotalBalance";
 
 function TabButton({ title, active, onPress }) {
   return (
@@ -35,14 +36,8 @@ export default function BillsScreen() {
   const navigation = useNavigation();
 
   const billsFromRedux = useSelector((state) => state.bills.list || []);
-  const listToRender = billsFromRedux;
 
-
-
-  const total = listToRender.reduce((sum, item) => {
-    const converted = convertToUAH(item.balance, item.currencyCode);
-    return sum + converted;
-  }, 0);
+  const totalBalance = useTotalBalance();
 
   const groupedBills = billsFromRedux.reduce((acc, bill) => {
     acc[bill.type] = acc[bill.type] || [];
@@ -59,7 +54,7 @@ export default function BillsScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Загальний баланс</Text>
-          <Text style={styles.headerAmount}>{total.toFixed(2)} ₴</Text>
+          <Text style={styles.headerAmount}>{totalBalance.toFixed(2)} ₴</Text>
 
           <TouchableOpacity
             style={styles.plusCircle}

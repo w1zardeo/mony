@@ -9,7 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../theme/colors"; 
-import { COLOR_LIST } from "../constants/icons";
+import { COLOR_LIST } from "../constants/color";
 import ScreenWrapper from "../components/ScreenWrapper";
 
 export default function ColorPickerModalCategories() {

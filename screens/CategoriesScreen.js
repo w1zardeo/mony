@@ -12,9 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { colors } from "../theme/colors";
 import { useSelector } from "react-redux";
-import { CURRENCIES_DATA } from "../constants/currency";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { convertToUAH } from "../features/functions";
+import { useTotalBalance } from "../hooks/useTotalBalance";
 
 const CategoryCard = ({ item, onPress, onLongPress }) => (
   <TouchableOpacity
@@ -51,10 +50,7 @@ export default function CategoriesScreen() {
   const expenseCategories = useSelector((state) => state.categories.expense);
   const incomeCategories = useSelector((state) => state.categories.income);
 
-  const totalBalance = bills.reduce((sum, bill) => {
-    const convertedAmount = convertToUAH(bill.balance, bill.currencyCode);
-    return sum + convertedAmount;
-  }, 0);
+  const totalBalance = useTotalBalance();
 
   
   const filteredTransactions = useMemo(() => {
