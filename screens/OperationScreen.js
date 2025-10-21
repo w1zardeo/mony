@@ -16,10 +16,7 @@ const allCategories = [...categoriesData, ...incomeCategoriesData];
 
 export default function OperationsScreen() {
   const transactions = useSelector((state) => state.transactions.transactions);
-  const bills = useSelector((state) => state.bills.list || []);
-
   const reversedTransactions = [...transactions].reverse();
-
 
   const totalBalance = useTotalBalance();
 
