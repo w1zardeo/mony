@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -29,7 +29,7 @@ export default function AddTransactionModal({ route }) {
     if (!selectedBill && billsList.length > 0) {
       dispatch(setSelectedBill(billsList[0]));
     }
-  }, [selectedBill, billsList, dispatch]); 
+  }, [selectedBill, billsList, dispatch]);
 
   const handlePress = (value) => {
     if (amount === "0" && value !== ",") setAmount(value);
@@ -127,9 +127,7 @@ export default function AddTransactionModal({ route }) {
           size={20}
           color={colors.white}
         />
-        <Text style={styles.selectorValue}>
-          {category?.name || "Інше"}
-        </Text>
+        <Text style={styles.selectorValue}>{category?.name || "Інше"}</Text>
       </View>
     </View>
   );
@@ -159,10 +157,7 @@ export default function AddTransactionModal({ route }) {
           <CalcButton value="7" onPress={handlePress} />
           <CalcButton value="8" onPress={handlePress} />
           <CalcButton value="9" onPress={handlePress} />
-          <TouchableOpacity
-            style={styles.calcButton}
-            onPress={handleBackspace}
-          >
+          <TouchableOpacity style={styles.calcButton} onPress={handleBackspace}>
             <Icon name="backspace-outline" size={28} color="#3478F6" />
           </TouchableOpacity>
 

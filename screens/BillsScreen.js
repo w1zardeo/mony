@@ -11,9 +11,9 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { colors } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { CURRENCIES_DATA } from "../constants/currency";
 import { Ionicons } from "@expo/vector-icons";
 import { billsType } from "../constants/data";
+import { convertToUAH } from "../features/functions";
 
 function TabButton({ title, active, onPress }) {
   return (
@@ -37,11 +37,7 @@ export default function BillsScreen() {
   const billsFromRedux = useSelector((state) => state.bills.list || []);
   const listToRender = billsFromRedux;
 
-  const convertToUAH = (amount, currencyCode) => {
-    const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
-    if (!currency) return Number(amount) || 0;
-    return (Number(amount) || 0) * currency.rateToUAH;
-  };
+
 
   const total = listToRender.reduce((sum, item) => {
     const converted = convertToUAH(item.balance, item.currencyCode);

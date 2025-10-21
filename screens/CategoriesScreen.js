@@ -14,6 +14,7 @@ import { colors } from "../theme/colors";
 import { useSelector } from "react-redux";
 import { CURRENCIES_DATA } from "../constants/currency";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { convertToUAH } from "../features/functions";
 
 const CategoryCard = ({ item, onPress, onLongPress }) => (
   <TouchableOpacity
@@ -49,15 +50,6 @@ export default function CategoriesScreen() {
 
   const expenseCategories = useSelector((state) => state.categories.expense);
   const incomeCategories = useSelector((state) => state.categories.income);
-
-  const convertToUAH = (amount, currencyCode) => {
-    const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
-    const numericAmount = Number(amount) || 0;
-    if (!currency || currency.code === "UAH") {
-      return numericAmount;
-    }
-    return numericAmount * currency.rateToUAH;
-  };
 
   const totalBalance = bills.reduce((sum, bill) => {
     const convertedAmount = convertToUAH(bill.balance, bill.currencyCode);

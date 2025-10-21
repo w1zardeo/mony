@@ -11,7 +11,7 @@ import ModalWrapper from "../components/ModalWrapper";
 import { colors } from "../theme/colors";
 import { CURRENCIES_DATA } from "../constants/currency";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { CurrencyContext } from "../context/currencyContext";
 import { useContext } from "react";
 

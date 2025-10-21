@@ -3,3 +3,8 @@ export const billsType = [
     {label: 'Заощадження', value: 'savings'}
     
 ]
+
+export const categoryTypes = [
+  { label: "Витрати", value: "expense" },
+  { label: "Доходи", value: "income" },
+];

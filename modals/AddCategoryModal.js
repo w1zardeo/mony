@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,19 +13,15 @@ import { colors } from "../theme/colors";
 import { Dropdown } from "react-native-element-dropdown";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { addCategory, updateCategory, deleteCategory } from "../store/categoriesSlice";
+import {
+  addCategory,
+  updateCategory,
+  deleteCategory,
+} from "../store/categoriesSlice";
 import { Ionicons } from "@expo/vector-icons";
-import { ALL_ICONS_LIST, getRandomColor } from "../constants/icons"; 
-
-const categoryTypes = [
-  { label: "Витрати", value: "expense" },
-  { label: "Доходи", value: "income" },
-];
-
-const getRandomIcon = () => {
-  return ALL_ICONS_LIST[Math.floor(Math.random() * ALL_ICONS_LIST.length)];
-};
-
+import { getRandomIcon } from "../features/functions";
+import { getRandomColor } from "../features/functions";
+import { categoryTypes } from "../constants/data";
 
 export default function AddCategoryModal() {
   const route = useRoute();
@@ -39,9 +35,11 @@ export default function AddCategoryModal() {
   const [type, setType] = useState(
     existingCategory?.type || route.params?.defaultType || "expense"
   );
-  
+
   const [icon, setIcon] = useState(existingCategory?.icon || getRandomIcon());
-  const [color, setColor] = useState(existingCategory?.color || getRandomColor());
+  const [color, setColor] = useState(
+    existingCategory?.color || getRandomColor()
+  );
 
   useEffect(() => {
     if (route.params?.selectedIcon) {
@@ -98,10 +96,15 @@ export default function AddCategoryModal() {
   return (
     <ScreenWrapper style={styles.wrapper}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{isEditMode ? 'Редагувати категорію' : 'Нова категорія'}</Text>
+        <Text style={styles.title}>
+          {isEditMode ? "Редагувати категорію" : "Нова категорія"}
+        </Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -120,12 +123,12 @@ export default function AddCategoryModal() {
 
         <View style={styles.iconBlock}>
           <Text style={styles.iconLabel}>Іконка</Text>
-          <TouchableOpacity 
-            style={[styles.iconRightBox, { backgroundColor: color }]} 
+          <TouchableOpacity
+            style={[styles.iconRightBox, { backgroundColor: color }]}
             onPress={() => navigation.navigate("IconPickerModalCategories")}
           >
             {icon ? (
-              <Ionicons name={icon} size={28} color={colors.white} /> 
+              <Ionicons name={icon} size={28} color={colors.white} />
             ) : (
               <Ionicons name="image-outline" size={24} color={colors.white} />
             )}
@@ -134,7 +137,7 @@ export default function AddCategoryModal() {
 
         <View style={styles.iconBlock}>
           <Text style={styles.iconLabel}>Колір</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.colorRightBox}
             onPress={() => navigation.navigate("ColorPickerModalCategories")}
           >
@@ -164,12 +167,22 @@ export default function AddCategoryModal() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={onSave} activeOpacity={0.8}>
-          <Text style={styles.saveText}>{isEditMode ? 'Зберегти' : 'Створити'}</Text>
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={onSave}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.saveText}>
+            {isEditMode ? "Зберегти" : "Створити"}
+          </Text>
         </TouchableOpacity>
 
         {isEditMode && (
-          <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDelete}
+            activeOpacity={0.8}
+          >
             <Text style={styles.deleteText}>Видалити категорію</Text>
           </TouchableOpacity>
         )}
@@ -183,42 +196,135 @@ export default function AddCategoryModal() {
 const styles = StyleSheet.create({
   wrapper: { flex: 1, backgroundColor: colors.black },
   textStyle: { paddingLeft: 10 },
-  header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingBottom: 12 },
-  backButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center", marginRight: 8 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+  },
   backText: { color: colors.white, fontSize: 22 },
-  title: { flex: 1, textAlign: "center", marginRight: 35, color: colors.white, fontSize: 20, fontWeight: "600" },
+  title: {
+    flex: 1,
+    textAlign: "center",
+    marginRight: 35,
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: "600",
+  },
   content: { paddingHorizontal: 16, paddingBottom: 40 },
-  inputBlock: { marginTop: 12, backgroundColor: "transparent", borderRadius: 12, padding: 20, borderWidth: 1, borderColor: "#444" },
-  label: { color: colors.white, marginBottom: 12, fontSize: 16, fontWeight: "600", paddingLeft: 10 },
-  inputBox: { backgroundColor: "transparent", borderRadius: 8, borderWidth: 1, borderColor: "#888", padding: 15 },
+  inputBlock: {
+    marginTop: 12,
+    backgroundColor: "transparent",
+    borderRadius: 12,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#444",
+  },
+  label: {
+    color: colors.white,
+    marginBottom: 12,
+    fontSize: 16,
+    fontWeight: "600",
+    paddingLeft: 10,
+  },
+  inputBox: {
+    backgroundColor: "transparent",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#888",
+    padding: 15,
+  },
   input: { color: colors.white, fontSize: 16 },
-  rowBox: { height: 56, borderRadius: 8, justifyContent: "center", paddingHorizontal: 10 },
-  valueText: { color: colors.white, fontSize: 16, fontWeight: "600", paddingRight: 10 },
-  iconBlock: { marginTop: 12, flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#3A3A3C", borderRadius: 12, overflow: "hidden", height: 56, backgroundColor: colors.black, justifyContent: "space-between", paddingLeft: 14 },
-  iconLabel: { color: "#fff", fontSize: 16, fontWeight: "600", paddingLeft: 15 },
-  iconRightBox: { width: 56, height: "100%", justifyContent: "center", alignItems: "center" },
+  rowBox: {
+    height: 56,
+    borderRadius: 8,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  valueText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: "600",
+    paddingRight: 10,
+  },
+  iconBlock: {
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#3A3A3C",
+    borderRadius: 12,
+    overflow: "hidden",
+    height: 56,
+    backgroundColor: colors.black,
+    justifyContent: "space-between",
+    paddingLeft: 14,
+  },
+  iconLabel: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+    paddingLeft: 15,
+  },
+  iconRightBox: {
+    width: 56,
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   colorRightBox: {
-    width: 56, 
-    height: "100%", 
-    justifyContent: "center", 
+    width: 56,
+    height: "100%",
+    justifyContent: "center",
     alignItems: "center",
   },
   colorPreview: {
     width: 32,
     height: 32,
-    borderRadius: 16, 
+    borderRadius: 16,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.7)',
+    borderColor: "rgba(255, 255, 255, 0.7)",
   },
-  dropdownContainer: { height: 54, borderWidth: 1, borderColor: "#d4d4d4", paddingHorizontal: 15, borderRadius: 15 },
+  dropdownContainer: {
+    height: 54,
+    borderWidth: 1,
+    borderColor: "#d4d4d4",
+    paddingHorizontal: 15,
+    borderRadius: 15,
+  },
   dropdownSelectedText: { color: colors.white, fontSize: 16 },
   dropdownItemText: { color: colors.white },
   dropdownItemContainer: { borderRadius: 15, marginHorizontal: 7 },
-  dropdownListContainer: { backgroundColor: colors.black, borderRadius: 15, paddingVertical: 7, top: 5, borderColor: colors.neutral500 },
+  dropdownListContainer: {
+    backgroundColor: colors.black,
+    borderRadius: 15,
+    paddingVertical: 7,
+    top: 5,
+    borderColor: colors.neutral500,
+  },
   placeholderStyle: { color: colors.white, fontSize: 16 },
-  saveButton: { marginTop: 12, backgroundColor: colors.green, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
+  saveButton: {
+    marginTop: 12,
+    backgroundColor: colors.green,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
   saveText: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  deleteButton: { marginTop: 12, backgroundColor: '#D93F3F', paddingVertical: 14, borderRadius: 12, alignItems: "center" },
+  deleteButton: {
+    marginTop: 12,
+    backgroundColor: "#D93F3F",
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+  },
   deleteText: { color: colors.white, fontWeight: "600", fontSize: 16 },
   colorPalette: {
     flexDirection: "row",

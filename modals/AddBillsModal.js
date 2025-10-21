@@ -17,11 +17,7 @@ import { CurrencyContext } from "../context/currencyContext";
 import { useDispatch } from "react-redux";
 import { addBill, updateBill, deleteBill } from "../store/billsSlice";
 import { Ionicons } from "@expo/vector-icons";
-import { ALL_ICONS_LIST, getRandomColor } from "../constants/icons"; 
-
-const getRandomIcon = () => {
-  return ALL_ICONS_LIST[Math.floor(Math.random() * ALL_ICONS_LIST.length)];
-};
+import {getRandomIcon, getRandomColor} from '../features/functions';
 
 export default function AddBillsModal() {
   const route = useRoute();

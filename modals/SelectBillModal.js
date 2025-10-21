@@ -16,6 +16,7 @@ import { billsType } from "../constants/data";
 import { useDispatch } from "react-redux";
 import { setSelectedBill } from "../store/billsSlice";
 import { Ionicons } from "@expo/vector-icons"; 
+import { convertToUAH } from "../features/functions";
 
 function TabButton({ title, active, onPress }) {
   return (
@@ -41,11 +42,6 @@ export default function SelectBillModal() {
   const route = useRoute();
   const isSelecting = route.params?.isSelecting || false;
 
-  const convertToUAH = (amount, currencyCode) => {
-    const currency = CURRENCIES_DATA.find((item) => item.code === currencyCode);
-    if (!currency) return Number(amount) || 0;
-    return (Number(amount) || 0) * currency.rateToUAH;
-  };
 
   const groupedBills = billsFromRedux.reduce((acc, bill) => {
     acc[bill.type] = acc[bill.type] || [];

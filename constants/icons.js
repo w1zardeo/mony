@@ -36,17 +36,4 @@ export const iconCategories = [
   },
 ];
 
-export const COLOR_LIST = [
-  '#FF5733', '#FF8D33', '#FFC300', '#DAF7A6', '#33FF57',
-  '#33FFBD', '#33D4FF', '#3371FF', '#8D33FF', '#C70039',
-  '#581845', '#1c261b', '#0F2A3B', '#262A2C', '#3A3A3C',
-  '#008080', '#009688', '#4CAF50', '#8BC34A', '#CDDC39',
-  '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548',
-  '#9E9E9E', '#607D8B', '#E91E63', '#9C27B0', '#673AB7',
-];
-
-export const getRandomColor = () => {
-  return COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)];
-};
-
 export const ALL_ICONS_LIST = iconCategories.flatMap(category => category.icons);
